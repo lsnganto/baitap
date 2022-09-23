@@ -105,7 +105,7 @@ namespace baitap
 
             request.AddParameter("customer", jsoncustom);
             request.AddParameter("contract", jsoncontract);
-            request.AddFile("1_001_C22TTM_35_30760.pdf", @"F:/1_001_C22TTM_35_30760.pdf");
+            request.AddFile("", @"F:/1_001_C22TTM_35_30760.pdf");
             request.AddParameter("fields", "{}");
             IRestResponse response = client.Execute(request);
             Console.WriteLine(response.Content);
@@ -113,6 +113,12 @@ namespace baitap
 
         private void button3_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(contractId.Text))
+            {
+                MessageBox.Show("Chưa nhập ID hợp đồng");
+                return;
+            }
+
             var client = new RestClient($"https://apigateway-econtract-staging.vnptit3.vn/esolution-service/contracts/{contractId.Text}/submit-contract");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
@@ -126,6 +132,11 @@ namespace baitap
 
         private void button4_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(contractId.Text))
+            {
+                MessageBox.Show("Chưa nhập ID hợp đồng");
+                return;
+            }
             var client = new RestClient($"https://apigateway-econtract-staging.vnptit3.vn/esolution-service/contracts/{contractId.Text}/digital-sign");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
