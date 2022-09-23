@@ -43,35 +43,39 @@ namespace baitap
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var client = new RestClient("https://apigateway-econtract-staging.vnptit3.vn/esolution-service/contracts/create-draft-from-file-raw");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("Content-Type", "multipart/form-data");
-            request.AddHeader("Authorization", "Bearer " + access_token.Text);
-            var customBody = new
+            OpenFileDialog file = new OpenFileDialog();
+            var rs = file.ShowDialog();
+            if (rs == DialogResult.OK)
             {
-                email = "lsnganto@gmail.com",
-                sdt = "+12064563059",
-                userType = "CONSUMER",
-                ten = "Huan nc",
-                noiCap = "",
-                tenToChuc = "to chuc huannc",
-                mst = "0889509966",
-                loaiGtId = "1",
-                soDkdn = "",
-                ngayCapSoDkdn = "2021-12-22",
-                noiCapDkkd = ""
+                var client = new RestClient("https://apigateway-econtract-staging.vnptit3.vn/esolution-service/contracts/create-draft-from-file-raw");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Content-Type", "multipart/form-data");
+                request.AddHeader("Authorization", "Bearer " + access_token.Text);
+                var customBody = new
+                {
+                    email = "lsnganto@gmail.com",
+                    sdt = "+12064563059",
+                    userType = "CONSUMER",
+                    ten = "Huan nc",
+                    noiCap = "",
+                    tenToChuc = "to chuc huannc",
+                    mst = "0889509966",
+                    loaiGtId = "1",
+                    soDkdn = "",
+                    ngayCapSoDkdn = "2021-12-22",
+                    noiCapDkkd = ""
 
-            };
-            var contractBody = new
-            {
-                autoRenew = "true",
-                callbackUrl = "test url",
-                contractValue = "20000",
-                creationNote = "",
-                endDate = "2022-11-17",
-                sequence = 1,
-                signFlow = new List<object>() {
+                };
+                var contractBody = new
+                {
+                    autoRenew = "true",
+                    callbackUrl = "test url",
+                    contractValue = "20000",
+                    creationNote = "",
+                    endDate = "2022-11-17",
+                    sequence = 1,
+                    signFlow = new List<object>() {
                     new
                     {
                         signType = "APPROVE",
@@ -90,25 +94,27 @@ namespace baitap
                         limitDate = 3
                     }
                 },
-                signForm = new List<string>(){
+                    signForm = new List<string>(){
                             "NO_AUTHEN"
                         },
-                templateId = "606196ce5e3f61a09ef8ed55",
-                title = "Hop dong huannc",
-                validDate = "2022-11-17",
-                verificationType = "NONE",
-                fixedPosition = false
-            };
+                    templateId = "606196ce5e3f61a09ef8ed55",
+                    title = "Hop dong huannc",
+                    validDate = "2022-11-17",
+                    verificationType = "NONE",
+                    fixedPosition = false
+                };
 
-            var jsoncustom = JsonConvert.SerializeObject(customBody);
-            var jsoncontract = JsonConvert.SerializeObject(contractBody);
+                var jsoncustom = JsonConvert.SerializeObject(customBody);
+                var jsoncontract = JsonConvert.SerializeObject(contractBody);
 
-            request.AddParameter("customer", jsoncustom);
-            request.AddParameter("contract", jsoncontract);
-            request.AddFile("", @"F:/1_001_C22TTM_35_30760.pdf");
-            request.AddParameter("fields", "{}");
-            IRestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
+                request.AddParameter("customer", jsoncustom);
+                request.AddParameter("contract", jsoncontract);
+                request.AddFile("", file.FileName);
+                request.AddParameter("fields", "{}");
+                IRestResponse response = client.Execute(request);
+                Console.WriteLine(response.Content);
+            }
+
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -137,29 +143,34 @@ namespace baitap
                 MessageBox.Show("Chưa nhập ID hợp đồng");
                 return;
             }
-            var client = new RestClient($"https://apigateway-econtract-staging.vnptit3.vn/esolution-service/contracts/{contractId.Text}/digital-sign");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("Authorization", "Bearer " + access_token.Text);
-            request.AddFile("file", @"F:/1_001_C22TTM_35_30760.pdf");
-            var body = new
+            OpenFileDialog file = new OpenFileDialog();
+            var rs = file.ShowDialog();
+            if (rs == DialogResult.OK)
             {
-                SignForm = "OTP_EMAIL",
-                name = "Nguyen cong huan",
-                taxCode = "1231231234",
-                provider = "Công Ty VNPT",
-                pathImg = "iVBORw0KGgoAAAANSUhEUgAAAZAAAAJYCAYAAABM7LCIAABym",
-                identifierCode = "1231231234",
-                phone = "0917881199",
-                email = "lsnganto@gmail.com",
-                status = "VALID",
-                signType = "APPROVAL",
-                ekycInfo = "APPROVAL"
-            };
-            var jsonBody = JsonConvert.SerializeObject(body);
-            request.AddParameter("data", jsonBody);
-            IRestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
+                var client = new RestClient($"https://apigateway-econtract-staging.vnptit3.vn/esolution-service/contracts/{contractId.Text}/digital-sign");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Authorization", "Bearer " + access_token.Text);
+                request.AddFile("file", @"F:/1_001_C22TTM_35_30760.pdf");
+                var body = new
+                {
+                    SignForm = "OTP_EMAIL",
+                    name = "Nguyen cong huan",
+                    taxCode = "1231231234",
+                    provider = "Công Ty VNPT",
+                    pathImg = "iVBORw0KGgoAAAANSUhEUgAAAZAAAAJYCAYAAABM7LCIAABym",
+                    identifierCode = "1231231234",
+                    phone = "0917881199",
+                    email = "lsnganto@gmail.com",
+                    status = "VALID",
+                    signType = "APPROVAL",
+                    ekycInfo = "APPROVAL"
+                };
+                var jsonBody = JsonConvert.SerializeObject(body);
+                request.AddParameter("data", jsonBody);
+                IRestResponse response = client.Execute(request);
+                Console.WriteLine(response.Content);
+            }
         }
     }
 }
