@@ -21,7 +21,8 @@ namespace baitap
         }
 
         private string ParseAccessToken(string content) => (string)JObject.Parse(content).SelectToken("access_token");
-        private string ParseContractId(string content) => (string)JObject.Parse(content).SelectToken("access_token");
+        private string ParseMessage(string content) => (string)JObject.Parse(content).SelectToken("message");
+        private string ParseContractId(string content) => (string)JObject.Parse(content).SelectToken("object").SelectToken("contractId");
         private void button1_Click(object sender, EventArgs e)
         {
             var client = new RestClient("https://apigateway-econtract-staging.vnptit3.vn/auth-service/oauth/token");
@@ -112,7 +113,13 @@ namespace baitap
                 request.AddFile("", file.FileName);
                 request.AddParameter("fields", "{}");
                 IRestResponse response = client.Execute(request);
-                Console.WriteLine(response.Content);
+                var mss = ParseMessage(response.Content);
+                if(mss == "ECT-00000000")
+                {
+                    contractId.Text = ParseContractId(response.Content);
+                    MessageBox.Show("Tạo thành công hợp đồng");
+                }
+                
             }
 
         }
