@@ -110,16 +110,16 @@ namespace baitap
 
                 request.AddParameter("customer", jsoncustom);
                 request.AddParameter("contract", jsoncontract);
-                request.AddFile("", file.FileName);
+                request.AddFile("", file.FileName, "application/pdf");
                 request.AddParameter("fields", "{}");
                 IRestResponse response = client.Execute(request);
                 var mss = ParseMessage(response.Content);
-                if(mss == "ECT-00000000")
+                if (mss == "ECT-00000000")
                 {
                     contractId.Text = ParseContractId(response.Content);
                     MessageBox.Show("Tạo thành công hợp đồng");
                 }
-                
+
             }
 
         }
@@ -158,7 +158,7 @@ namespace baitap
                 client.Timeout = -1;
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("Authorization", "Bearer " + access_token.Text);
-                request.AddFile("file", @"F:/1_001_C22TTM_35_30760.pdf");
+                request.AddFile("file", file.FileName, "application/pdf");
                 var body = new
                 {
                     SignForm = "OTP_EMAIL",
